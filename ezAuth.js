@@ -8,7 +8,13 @@ var sess;
 
 var isLogin = function(req) {
 	sess = req.session;
-	if(sess.user) return true;
+	if(sess.user) {
+		ezSQL.find('users', sess.user.id, function(user) {
+			sess.user = user;
+			delete sess.user.password;
+		});
+		return true;
+	}
 	else return false;
 };
 
@@ -18,6 +24,7 @@ var login = function(req, data, callback) {
 			if(bcrypt.compareSync(data.password, user[0].password)) {
 				sess = req.session;
 				sess.user = user[0];
+				delete sess.user.password;
 				callback(user[0]);
 			}
 			else callback(undefined);
@@ -35,6 +42,7 @@ var update = function(req, callback) {
 		sess = req.session;
 		ezSQL.find('users', sess.user.id, function(user) {
 			sess.user = user;
+			delete sess.user.password;
 			callback(user);
 		});
 	}
