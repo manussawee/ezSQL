@@ -7,6 +7,7 @@ app = express();
 
 app.use(bodyParser());
 app.use(session({secret: 'ezSQL and ezAuth'}));
+app.use(express.static('public'));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
